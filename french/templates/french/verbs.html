@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for verb in verbs %}
+        {{ verb.infinitif }} 
+        <input type="text" id="input-{{ verb.pk }}" placeholder="Input">
+        <input type="submit" id='submit-{{ verb.pk }}' value="Submit" onclick="opposite('{{ verb.pk }}', 'input-{{ verb.pk }}', 'result-{{ verb.pk }}')">
+        Result: <h id='result-{{ verb.pk }}'></h>
+        <br>
+    {% endfor %} 
+</body>
+</html>
+
+<script>
+
+  var temp = {};
+  var data = JSON.parse("{{verbs_json|escapejs}}");
+
+  for (d in data) {
+
+    temp[data[d]['pk']] = data[d]['fields']
+
+  }
+    
+
+  function opposite(verb_pk, input_id, result_id, data=temp){
+
+    // get the text from input box
+    var input = document.getElementById(input_id).value;
+    // get correct answer
+    var correct_value = data[verb_pk]['translation']
+    // get result field
+    var result = document.getElementById(result_id)
+
+    if (input.toLowerCase()==correct_value.toLowerCase()) {
+      result.innerHTML = "success!"
+    } else {
+      result.innerHTML = "incorrect!"
+    }
+
+  }
+</script>
